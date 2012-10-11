@@ -10,7 +10,7 @@ package com.ahura.places;
  * @author pani
  * @see https://developers.google.com/places/documentation/details
  */
-public class DetailsResultParser {
+public class DetailsParser {
 
 	public void doGetDetails(Place restaurant) {
 		// TODO: implement this method
