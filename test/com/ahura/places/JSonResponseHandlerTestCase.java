@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -33,7 +32,7 @@ public class JSonResponseHandlerTestCase extends TestCase {
 	
 	public void testComposeUrl_empty() {
 		assertEquals(baseUrl + "/json" ,
-				handler.composeUrl(new HashMap<String, String>()));
+				handler.composeUrl(new Request()));
 	}
 	
 	public void testComposeUrl_base64() {
@@ -41,9 +40,9 @@ public class JSonResponseHandlerTestCase extends TestCase {
 	}
 	
 	public void testComposeUrl_withParam() {
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("fooK", "fooV");
-		params.put("barK", "barV");
+		Request params = new Request()
+				.put("fooK", "fooV")
+				.put("barK", "barV");
 		
 		assertEquals(baseUrl + "/json?barK=barV&fooK=fooV" ,
 				handler.composeUrl(params));
@@ -52,7 +51,7 @@ public class JSonResponseHandlerTestCase extends TestCase {
 	public void testRreadJsonResponse_invalidUrlThrowsAnException() {
 		try {
 			handler = new JSonResponseHandler("not a url string", key);
-			handler.readJsonResponse(new HashMap<String, String>());
+			handler.readJsonResponse(new Request());
 			fail("Invalid url should have thrown an exception.");
 		} catch (IOException ex) {
 			// Pass
@@ -61,7 +60,7 @@ public class JSonResponseHandlerTestCase extends TestCase {
 
     public void testRreadJsonResponse_unreachableUrlThrowsAnException() {
 		try {
-			handler.readJsonResponse(new HashMap<String, String>());
+			handler.readJsonResponse(new Request());
 			fail("Unreachable url should have thrown an exception.");
 		} catch (UnknownHostException ex) {
 			// Pass

@@ -50,16 +50,16 @@ public class JSonResponseHandler {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T readJsonResponse(Map<String, String> urlParams, Type typeOfT)
+	public <T> T readJsonResponse(Request request, Type typeOfT)
 			throws UnknownHostException, IOException {
-		String json = readJsonResponse(urlParams);
+		String json = readJsonResponse(request);
 		Gson gson = new Gson();
 		return (T) gson.fromJson(json, typeOfT);
 	}
 	
-	public String readJsonResponse(Map<String, String> urlParams)
+	public String readJsonResponse(Request request)
 			throws IOException, UnknownHostException {
-		String urlAddress = composeUrl(urlParams);
+		String urlAddress = composeUrl(request);
 		// create a URL
 		// if url is null or not valid throw an exception
 		
@@ -74,13 +74,13 @@ public class JSonResponseHandler {
 		throw new RuntimeException("Not implemented yet");		
 	}
 	
-	protected String composeUrl(Map<String, String> urlParams) {
+	protected String composeUrl(Request request) {
 		StringBuilder builder = new StringBuilder(); 
 		builder.append(baseUrl);
 		builder.append("?key=")
 				.append(key);
 		
-		for (Map.Entry<String, String> entry : urlParams.entrySet()){
+		for (Map.Entry<String, String> entry : request.entrySet()){
 			// TODO encode both key and value in base64
 			builder.append(entry.getKey())
 					.append("=")

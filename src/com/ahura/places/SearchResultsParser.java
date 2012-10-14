@@ -3,11 +3,11 @@
  */
 package com.ahura.places;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 import com.ahura.places.models.Place;
-
-import android.location.Location;
+import com.ahura.places.models.SearchResult;
 
 /**
  * Parses a search result json response and loads a
@@ -19,9 +19,16 @@ import android.location.Location;
  */
 public class SearchResultsParser {
 
-	public List<Place> search(Location location) {
-		// TODO: implement this method
-		throw new RuntimeException("Not implemented yet");
+	private static final String URL = "https://maps.googleapis.com/maps/api/place/search/";
+	private final JSonResponseHandler responseHandler;
+	
+	public SearchResultsParser(String key) {
+		responseHandler = new JSonResponseHandler(key, URL);
+	}
+	
+	public SearchResult search(Request request)
+			throws UnknownHostException, IOException {
+		return responseHandler.readJsonResponse(request, SearchResult.class);
 	}
 	
 }
