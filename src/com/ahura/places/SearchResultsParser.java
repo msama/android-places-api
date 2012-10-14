@@ -5,6 +5,8 @@ package com.ahura.places;
 
 import java.util.List;
 
+import com.ahura.places.models.Place;
+
 import android.location.Location;
 
 /**
@@ -17,7 +19,7 @@ import android.location.Location;
  */
 public class SearchResultsParser {
 
-	public List<Place> doSearch(Location location) {
+	public List<Place> search(Location location) {
 		// TODO: implement this method
 		throw new RuntimeException("Not implemented yet");
 	}
