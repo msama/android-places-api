@@ -105,5 +105,10 @@ public class Place {
 	public void setTypes(String[] types) {
 		this.types = types;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 	
 }

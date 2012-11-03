@@ -3,6 +3,7 @@ package com.ahura.places;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.UnknownHostException;
 
 import junit.framework.TestCase;
 
@@ -20,26 +21,37 @@ public class JSonResponseHandlerTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+
+	public void testConstructor_addTrailingSlashOnlyIfNeeded() {
+		handler = new JSonResponseHandler(key, baseUrl + "/");
+		
+		assertEquals(baseUrl + "/json?key=" + key,
+				handler.composeUrl(new Request()));
+	}
 	
 	public void testComposeUrl_empty() {
-		assertEquals(baseUrl + "/json?key=the_key" ,
+		assertEquals(baseUrl + "/json?key=" + key,
 				handler.composeUrl(new Request()));
 	}
 	
 	public void testComposeUrl_base64() {
 		Request params = new Request()
-		.put("", "fooV")
-		.put("barK", "barV");
+		.put("foo$", "foo%")
+		// space " " is encoded as "+"
+		.put("bar K", "bar&");
 
-		assertEquals(baseUrl + "/json?key=the_key&barK=barV&fooK=fooV",
+		assertEquals(
+				baseUrl + "/json?key=" + key + "&foo%24=foo%25&bar+K=bar%26",
 				handler.composeUrl(params));
 	}
 	
 	public void testComposeUrl_withParam() {
 		Request params = new Request()
-				.put("foo€", "foo£");
+				.put("barK", "barV")
+				.put("fooK", "fooV");
 		
-		assertEquals(baseUrl + "/json?key=the_key&foo%80=foo%A3" ,
+		assertEquals(
+				baseUrl + "/json?key=" + key + "&fooK=fooV&barK=barV",
 				handler.composeUrl(params));
 	}
 	
@@ -57,8 +69,10 @@ public class JSonResponseHandlerTestCase extends TestCase {
 		try {
 			handler.readJsonResponse(new Request());
 			fail("Unreachable url should have thrown an exception.");
+		} catch (UnknownHostException ex) {
+			// Pass
 		} catch (IOException ex) {
-			//pass
+			fail("Unreachable host should thrown an unreachable host exception.");
 		}
 	}
     
@@ -69,7 +83,7 @@ public class JSonResponseHandlerTestCase extends TestCase {
 		assertEquals(response, readResponse);
 	}
     
-    public void testRreadJsonResponse_readFullString() throws IOException {
+    public void testReadJsonResponse_readFullString() throws IOException {
     	String response =
     			"{\n" +
 				    "\"glossary\": {\n" +
@@ -92,7 +106,7 @@ public class JSonResponseHandlerTestCase extends TestCase {
 				            "}\n" +
 				        "}\n" +
 				    "}\n" +
-	    		"}\n";
+	    		"}";
     	Reader reader = new StringReader(response);
 		String readResponse = handler.readJsonResponse(reader);
 		assertEquals(response, readResponse);

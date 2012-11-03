@@ -2,10 +2,13 @@ package com.ahura.places;
 
 import android.location.Location;
 
+/**
+ * @author pani
+ * @see https://developers.google.com/places/documentation/search
+ */
 public class SearchRequest extends Request {
 
-	public static final String LATITUDE = "latitude";
-	public static final String LONGITUDE = "longitude";
+	public static final String LOCATION = "location";
 	public static final String RADIUS = "radius";
 	public static final String SENSOR = "sensor";
 
@@ -13,8 +16,7 @@ public class SearchRequest extends Request {
 	public static SearchRequest create(
 			Location location, int radius, boolean sensor) {
 		return new SearchRequest()
-			.putLatitude(location.getLatitude())
-			.putLongitude(location.getLongitude())
+			.putLocation(location)
 			.putRadius(radius)
 			.putSensor(sensor);
 	}
@@ -33,13 +35,9 @@ public class SearchRequest extends Request {
 	}
 
 
-	public SearchRequest putLongitude(double longitude) {
-		return (SearchRequest) put(LONGITUDE, "" + longitude);
+	public SearchRequest putLocation(Location location) {
+		return (SearchRequest) put(LOCATION, location.getLatitude() + "," + location.getLongitude());
 	}
 
-
-	public SearchRequest putLatitude(double latitude) {
-		return (SearchRequest) put(LATITUDE, "" + latitude);
-	}
 
 }
